@@ -4,29 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script>PLACEHOLDER_SCRIPT</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        PLACEHOLDER_SCRIPT
+    </script>
     <style>
         PLACEHOLDER_STYLESHEET
     </style>
     <style>
-        :root {
+         :root {
             color-scheme: light dark !important;
         }
-
+        
         html,
         body {
             overscroll-behavior: none !important;
             margin: 0 !important;
         }
-
+        
         body::-webkit-scrollbar {
             display: none !important;
         }
-
+        
         #markdown-rendered>*:first-child {
             margin-top: 0 !important;
         }
-
+        
         #markdown-rendered>*:last-child {
             margin-bottom: 0 !important;
         }
@@ -37,34 +40,186 @@
     <div id="markdown-rendered"></div>
     <script>
         const markdownIt = window.markdownit({
-            highlight: function (str, lang) {
-                if (lang && hljs.getLanguage(lang)) {
-                    try {
-                        return hljs.highlight(str, { language: lang }).value;
-                    } catch (__) { }
-                } else {
-                    try {
-                        return hljs.highlightAuto(str).value;
-                    } catch (__) { }
-                }
+                highlight: function(str, lang) {
+                    if (lang && hljs.getLanguage(lang)) {
+                        try {
+                            return hljs.highlight(str, {
+                                language: lang
+                            }).value;
+                        } catch (__) {}
+                    } else {
+                        try {
+                            return hljs.highlightAuto(str).value;
+                        } catch (__) {}
+                    }
 
-                return ``;
-            },
-            linkify: true,
-        })
-        .use(window.markdownitMark)
-        .use(window.markdownitTaskLists);
+                    return ``;
+                },
+                linkify: true,
+            })
+            .use(window.markdownitMark)
+            .use(window.markdownitTaskLists);
 
         const markdownRenderedElement = document.getElementById(`markdown-rendered`);
 
         window.updateWithMarkdownContentBase64Encoded = (markdownContentBase64Encoded) => {
-            const markdownContent = decodeURIComponent(atob(markdownContentBase64Encoded).split(``).map(function (c) { return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2); }).join(``));
+            const markdownContent = decodeURIComponent(atob(markdownContentBase64Encoded).split(``).map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(``));
             markdownRenderedElement.innerHTML = markdownIt.render(markdownContent);
+
+            const highlights = document.querySelectorAll("pre")
+            console.log("highlights")
+            console.log(highlights)
+
+            highlights.forEach(div => {
+                // create the copy button
+                const copy = document.createElement("button")
+                copy.className = "copy-button"
+                copy.innerHTML = renderCopyIcon().outerHTML
+                    // copy.appendChild(renderCopyIcon())
+                copy.addEventListener("click", async() => {
+                    await copyCode(div);
+                });
+                // add the event listener to each click
+                // copy.addEventListener("click", handleCopyClick)
+                // append the copy button to each code block
+                div.appendChild(copy)
+            })
+
             window.webkit.messageHandlers.renderedContentHandler.postMessage(markdownContentBase64Encoded);
         }
 
-        const resizeObserver = new ResizeObserver((entries) => { window.webkit.messageHandlers.sizeChangeHandler.postMessage(entries[0].borderBoxSize[0].blockSize) });
+        const resizeObserver = new ResizeObserver((entries) => {
+            window.webkit.messageHandlers.sizeChangeHandler.postMessage(entries[0].borderBoxSize[0].blockSize)
+        });
         resizeObserver.observe(markdownRenderedElement);
+
+        function renderCopyIcon() {
+            const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            const iconPath = document.createElementNS(
+                'http://www.w3.org/2000/svg',
+                'path'
+            );
+
+            iconSvg.setAttribute('fill', 'currentColor');
+            iconSvg.setAttribute('viewBox', '0 0 24 24');
+            iconSvg.setAttribute('width', '14px');
+
+            iconPath.setAttribute(
+                'd',
+                'M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z'
+            );
+
+            const iconPath2 = document.createElementNS(
+                'http://www.w3.org/2000/svg',
+                'path'
+            );
+
+            iconPath2.setAttribute(
+                'd',
+                'M0 0h24v24H0z'
+            );
+            iconPath2.setAttribute('fill', 'none');
+
+            iconSvg.appendChild(iconPath2);
+            iconSvg.appendChild(iconPath);
+            return iconSvg
+        }
+
+        function renderCheckIcon() {
+            const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            const iconPath = document.createElementNS(
+                'http://www.w3.org/2000/svg',
+                'path'
+            );
+
+            iconSvg.setAttribute('fill', 'currentColor');
+            iconSvg.setAttribute('viewBox', '0 0 24 24');
+            iconSvg.setAttribute('width', '14px');
+
+            iconPath.setAttribute(
+                'd',
+                'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'
+            );
+
+            const iconPath2 = document.createElementNS(
+                'http://www.w3.org/2000/svg',
+                'path'
+            );
+
+            iconPath2.setAttribute(
+                'd',
+                'M0 0h24v24H0z'
+            );
+            iconPath2.setAttribute('fill', 'none');
+
+            iconSvg.appendChild(iconPath2);
+            iconSvg.appendChild(iconPath);
+            return iconSvg
+        }
+
+        async function copyCode(block) {
+            let copiedCode = block.cloneNode(true);
+            copiedCode.removeChild(copiedCode.querySelector("button.copy-button"));
+
+            const html = copiedCode.outerHTML.replace(/<[^>]*>?/gm, "");
+
+            block.querySelector("button.copy-button").innerHTML = renderCheckIcon().outerHTML;
+            setTimeout(function() {
+                block.querySelector("button.copy-button").innerHTML = renderCopyIcon().outerHTML;
+            }, 2000);
+
+            const parsedHTML = htmlDecode(html);
+
+            // await navigator.clipboard.writeText(parsedHTML);
+            if (!navigator.clipboard) {
+                // Use the 'out of viewport hidden text area' trick
+                const textArea = document.createElement("textarea");
+                textArea.value = parsedHTML;
+
+                // Move textarea out of the viewport so it's not visible
+                textArea.style.position = "absolute";
+                textArea.style.left = "-999999px";
+
+                document.body.prepend(textArea);
+                textArea.select();
+
+                try {
+                    document.execCommand('copy');
+                } catch (error) {
+                    console.error(error);
+                } finally {
+                    textArea.remove();
+                }
+            } else {
+                await navigator.clipboard.writeText(parsedHTML);
+            }
+        }
+
+        function htmlDecode(input) {
+            const doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
+        }
+
+        // const highlights = document.querySelectorAll("pre")
+        // console.log("highlights")
+        // console.log(highlights)
+
+        // highlights.forEach(div => {
+        //     // create the copy button
+        //     const copy = document.createElement("button")
+        //     copy.className = "copy-button"
+        //     copy.innerHTML = renderCopyIcon().outerHTML
+        //         // copy.appendChild(renderCopyIcon())
+        //     copy.addEventListener("click", async() => {
+        //         await copyCode(div);
+        //     });
+        //     // add the event listener to each click
+        //     // copy.addEventListener("click", handleCopyClick)
+        //     // append the copy button to each code block
+        //     div.appendChild(copy)
+        // })
     </script>
 </body>
 

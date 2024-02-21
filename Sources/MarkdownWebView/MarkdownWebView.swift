@@ -66,11 +66,21 @@ public struct MarkdownWebView: PlatformViewRepresentable {
             
             self.platformView.navigationDelegate = self
             
-            #if DEBUG && os(iOS)
-            if #available(iOS 16.4, *) {
+            #if DEBUG
+            if #available(iOS 16.4, macOS 13.3, *) {
                 self.platformView.isInspectable = true
             }
             #endif
+
+            // if #available(macOS 13.3, *) {
+            //     self.platformView.isInspectable = true
+            // } else {
+            //     // Fallback on earlier versions
+            // }
+            
+            // if self.platformView.responds(to: Selector(("setInspectable:"))) {
+            //    self.platformView.perform(Selector(("setInspectable:")), with: true)
+            // }
             
             /// So that the `View` adjusts its height automatically.
             self.platformView.setContentHuggingPriority(.required, for: .vertical)

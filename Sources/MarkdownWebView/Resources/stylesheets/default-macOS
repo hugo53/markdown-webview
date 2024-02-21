@@ -433,11 +433,11 @@
     padding-right: 12px;
 }
 
-#markdown-rendered table > tbody > tr:nth-child(odd) > td {
+#markdown-rendered table>tbody>tr:nth-child(odd)>td {
     background-color: -apple-system-even-alternating-content-background;
 }
 
-#markdown-rendered table > tbody > tr:nth-child(even) > td {
+#markdown-rendered table>tbody>tr:nth-child(even)>td {
     background-color: -apple-system-odd-alternating-content-background;
 }
 
@@ -539,13 +539,6 @@
     overflow: visible;
     clip: auto;
 }
-
-
-
-
-
-
-
 
 
 /*!
@@ -685,12 +678,10 @@
   Outdated base version: https://github.com/primer/github-syntax-dark
   Current colors taken from GitHub's CSS
 */
-
     .hljs {
         color: #c9d1d9;
         background: #0d1117;
     }
-
     .hljs-doctag,
     .hljs-keyword,
     .hljs-meta .hljs-keyword,
@@ -701,7 +692,6 @@
         /* prettylights-syntax-keyword */
         color: #ff7b72;
     }
-
     .hljs-title,
     .hljs-title.class_,
     .hljs-title.class_.inherited__,
@@ -709,7 +699,6 @@
         /* prettylights-syntax-entity */
         color: #d2a8ff;
     }
-
     .hljs-attr,
     .hljs-attribute,
     .hljs-literal,
@@ -723,27 +712,23 @@
         /* prettylights-syntax-constant */
         color: #79c0ff;
     }
-
     .hljs-regexp,
     .hljs-string,
     .hljs-meta .hljs-string {
         /* prettylights-syntax-string */
         color: #a5d6ff;
     }
-
     .hljs-built_in,
     .hljs-symbol {
         /* prettylights-syntax-variable */
         color: #ffa657;
     }
-
     .hljs-comment,
     .hljs-code,
     .hljs-formula {
         /* prettylights-syntax-comment */
         color: #8b949e;
     }
-
     .hljs-name,
     .hljs-quote,
     .hljs-selector-tag,
@@ -751,47 +736,39 @@
         /* prettylights-syntax-entity-tag */
         color: #7ee787;
     }
-
     .hljs-subst {
         /* prettylights-syntax-storage-modifier-import */
         color: #c9d1d9;
     }
-
     .hljs-section {
         /* prettylights-syntax-markup-heading */
         color: #1f6feb;
         font-weight: bold;
     }
-
     .hljs-bullet {
         /* prettylights-syntax-markup-list */
         color: #f2cc60;
     }
-
     .hljs-emphasis {
         /* prettylights-syntax-markup-italic */
         color: #c9d1d9;
         font-style: italic;
     }
-
     .hljs-strong {
         /* prettylights-syntax-markup-bold */
         color: #c9d1d9;
         font-weight: bold;
     }
-
     .hljs-addition {
         /* prettylights-syntax-markup-inserted */
         color: #aff5b4;
         background-color: #033a16;
     }
-
     .hljs-deletion {
         /* prettylights-syntax-markup-deleted */
         color: #ffdcd7;
         background-color: #67060c;
     }
-
     .hljs-char.escape_,
     .hljs-link,
     .hljs-params,
@@ -800,4 +777,68 @@
     .hljs-tag {
         /* purposely ignored */
     }
+}
+
+:root {
+    color-scheme: light dark !important;
+}
+
+html,
+body {
+    overscroll-behavior: none !important;
+    margin: 0 !important;
+}
+
+body::-webkit-scrollbar {
+    display: none !important;
+}
+
+#markdown-rendered>*:first-child {
+    margin-top: 0 !important;
+}
+
+#markdown-rendered>*:last-child {
+    margin-bottom: 0 !important;
+}
+
+
+/* .copy-button {
+    color: #adb5bd;
+    box-sizing: border-box;
+    transition: 0.2s ease-out;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0);
+    padding: 5px 10px;
+    font-size: 0.8em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0 0.15rem;
+}
+
+pre {
+    overflow: auto;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    position: relative;
+} */
+
+pre {
+    position: relative;
+    margin: 5px 0;
+    padding: 1.75rem 0 1.75rem 1rem;
+}
+
+pre>.copy-button {
+    background: #e2e8f022;
+    border-radius: 0.4rem;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 0.4rem;
+    position: absolute;
+    top: 12px;
+    right: 12px;
 }
